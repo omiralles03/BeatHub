@@ -1,8 +1,0 @@
-Sidetracked Day (Short Ver.) by VINXIS
-
-Beatmapset id = 2310753
-
--- DIFFS --
-"Tynamo's Resolution" (top diff): 5141310
-"Lost": 4943355
-"Astronic's Extreme": 4978112
