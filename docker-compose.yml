@@ -1,0 +1,57 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      PORT: ${PORT}
+      OSU_CLIENT_ID: ${OSU_CLIENT_ID}
+      OSU_CLIENT_SECRET: ${OSU_CLIENT_SECRET}
+      OSU_CALLBACK_URL: ${OSU_CALLBACK_URL}
+      OSU_API_KEY: ${OSU_API_KEY}
+      SESSION_SECRET: ${SESSION_SECRET}
+
+      # DB details
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+
+      # Valkey details
+      VALKEY_HOST: valkey
+      VALKEY_PORT: 6379
+    depends_on:
+      - db
+      - valkey
+    volumes:
+      - ./backend:/app
+    command: air -c .air.toml
+
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5454:5432"
+    environment:
+      # Postgres Dokcer image variables
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data # Persist db to volume
+    restart: unless-stopped
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    ports:
+      - "6363:6379"
+    volumes:
+      - valkey_data:/data # Persist Valkey data to volume
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  valkey_data:
+
