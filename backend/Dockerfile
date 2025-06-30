@@ -1,4 +1,5 @@
-FROM golang:1.24.4-alpine AS builder
+# Builder Stage
+FROM golang:1.24.4-alpine
 
 WORKDIR /app
 
@@ -6,18 +7,14 @@ COPY go.mod go.sum ./
 
 RUN go mod download
 
-COPY . .
+# Development/Runtime Stage
+FROM golang:1.24.4-alpine
 
-# Compile go app into a single binary
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-s -w" -o /beathub-backend .
+RUN apk add --no-cache ca-certificates libc6-compat
 
-FROM alpine:latest
+# air for live reload
+RUN go install github.com/air-verse/air@latest
 
-WORKDIR /root/
+WORKDIR /app
 
-COPY --from=builder /beathub-backend .
-
-EXPOSE 8080
-
-CMD ["./beathub-backend"]
-
+EXPOSE 3000
