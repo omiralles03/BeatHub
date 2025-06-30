@@ -1,1 +1,14 @@
+# Go binaries
+*.exe
+*.dll
+*.so
+*.dylib
+main
+temp_test
+
+# Go module cache
+vendor/
+
+node_modules/
+
 .env
