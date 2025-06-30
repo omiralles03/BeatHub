@@ -6,6 +6,9 @@
 main
 temp_test
 
+backend/tmp/
+backend/testing/
+
 # Go module cache
 vendor/
 
